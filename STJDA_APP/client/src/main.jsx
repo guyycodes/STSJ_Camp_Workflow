@@ -10,6 +10,9 @@ const muiTheme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: `
+      @import url("https://fonts.googleapis.com/css?family=DM+Sans:var(--paragraph-font-weight),var(--heading-5-font-weight),var(--heading-6-font-weight)|Plus+Jakarta+Sans:var(--heading-4-font-weight),var(--heading-3-font-weight),var(--heading-2-font-weight),var(--heading-1-font-weight)");
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+      
         * {
           -webkit-font-smoothing: antialiased;
           box-sizing: border-box;
@@ -48,7 +51,7 @@ const updateSW = registerSW({
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <MuiThemeProvider theme={muiTheme}>
-      <CssBaseline /> 
+      <CssBaseline /> {/* Normalize the CSS and add global styles */}
       <App />
     </MuiThemeProvider>
   </React.StrictMode>,
