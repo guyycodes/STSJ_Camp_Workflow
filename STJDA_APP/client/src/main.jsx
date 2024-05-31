@@ -2,23 +2,32 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material'
 import { registerSW } from 'virtual:pwa-register';
 
-// Create a custom theme
+// Create a custom theme with global styles
 const muiTheme = createTheme({
-  palette: {
-    primary: {
-      main: '#556cd6',  // Example color
-    },
-    secondary: {
-      main: '#19857b',  // Example color
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+        * {
+          -webkit-font-smoothing: antialiased;
+          box-sizing: border-box;
+        }
+        html, body {
+          margin: 0;
+          height: 100%;
+        }
+        button:focus-visible {
+          outline: 2px solid #4a90e2 !important;
+          outline: -webkit-focus-ring-color auto 5px !important;
+        }
+        a {
+          text-decoration: none;
+        }
+      `,
     },
   },
-  typography: {
-    fontFamily: 'Arial, sans-serif',
-    fontSize: 14,  // Base font size
-  },
-  // You can also customize other theme aspects here
 });
 
 // Register the service worker
@@ -39,6 +48,7 @@ const updateSW = registerSW({
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <MuiThemeProvider theme={muiTheme}>
+      <CssBaseline /> 
       <App />
     </MuiThemeProvider>
   </React.StrictMode>,

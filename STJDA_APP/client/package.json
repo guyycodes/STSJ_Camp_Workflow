@@ -34,7 +34,8 @@
     "react-icons": "^5.2.1",
     "react-router-dom": "^6.23.1",
     "rimraf": "^5.0.7",
-    "vite-plugin-ssr": "^0.4.142"
+    "vite-plugin-ssr": "^0.4.142",
+    "styled-components": "6.0.7"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
