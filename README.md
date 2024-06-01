@@ -6,6 +6,16 @@
 ## Overview
 The South Texas Juvenile Diabetes Association (STSJ) Workflow Automation project aims to streamline and automate the workflow processes for the association. The application will be developed as a progressive web app (PWA) using Node.js and will utilize two SQL databases for data storage and replication.
 
+## Repo Engagment
+#### Egnament process
+
+1) Make changes
+2) add and commit changes & open a new pull request
+3) New code additions must be peer reviewed
+4) New code additions mu be peer approved
+5) Commit changes
+
+
 ## Key Features
 - Automate and streamline workflow processes for STSJ
 - Progressive Web App (PWA) for enhanced user experience and offline functionality
