@@ -1,11 +1,12 @@
 import React from "react";
-import { Button } from "../../../../components/Button";
+
 import styled from "styled-components";
+import { Button as MuiButton, Menu, MenuItem } from '@mui/material';
 
 const StyledAboutUsSection = styled.div`
   align-items: center;
   align-self: stretch;
-  background-image: url(https://c.animaapp.com/I4tqUSkw/img/about-us-section.png);
+  background-color: #dfe6e9;
   background-position: 50% 50%;
   background-size: cover;
   display: flex;
@@ -26,12 +27,12 @@ const StyledAboutUsSection = styled.div`
 
   & .photo-2 {
     align-items: flex-end;
-    background-image: url(https://c.animaapp.com/I4tqUSkw/img/photo-1.png);
+    background-image: url(https://imgur.com/tEwOw1M.png);
     background-position: 50% 50%;
     background-size: cover;
     border-radius: 25px;
     display: flex;
-    gap: 8px;
+    gap: 1rem;
     height: 266px;
     padding: 0px 0px 16px 16px;
     position: relative;
@@ -41,7 +42,7 @@ const StyledAboutUsSection = styled.div`
   & .div-wrapper {
     align-items: center;
     border: 1px solid;
-    border-color: var(--white);
+    border-color: black;
     border-radius: 50px;
     display: inline-flex;
     flex: 0 0 auto;
@@ -51,7 +52,7 @@ const StyledAboutUsSection = styled.div`
   }
 
   & .text-wrapper-16 {
-    color: var(--white);
+    color: black;
     font-family: var(--heading-5-font-family);
     font-size: var(--heading-5-font-size);
     font-style: var(--heading-5-font-style);
@@ -139,7 +140,7 @@ const StyledAboutUsSection = styled.div`
     flex: 0 0 auto;
     flex-direction: column;
     gap: 56px;
-    padding: 118px 0px 0px;
+    padding: 0 0 0 1rem;
     position: relative;
   }
 
@@ -162,7 +163,8 @@ const StyledAboutUsSection = styled.div`
     line-height: var(--heading-2-line-height);
     margin-top: -1px;
     position: relative;
-    width: 610px;
+    width: 400px;
+   
   }
 
   & .text-wrapper-19 {
@@ -175,16 +177,29 @@ const StyledAboutUsSection = styled.div`
     line-height: var(--paragraph-line-height);
     opacity: 0.5;
     position: relative;
-    width: 610px;
+    width: 400px;
+  
   }
 
   & .button-10 {
     border-color: var(--black) !important;
     flex: 0 0 auto !important;
+    
   }
 
   & .button-11 {
     color: #1479cc !important;
+  }
+  & .button {
+    text-transform: none !important;
+  }
+
+  & .button-2 {
+    background-color: #1479cc !important;
+    display: flex !important;
+    color: var(--light-gray) !important;
+    width: 84px !important;
+    padding: 2px;
   }
 `;
 
@@ -216,14 +231,14 @@ export const AboutUsSection = () => {
       </div>
       <div className="contents-2">
         <div className="text-4">
-          <p className="text-wrapper-18">Volunteers - A Beacon of Hope and Health</p>
+          <p className="text-wrapper-18">Volunteers - <br></br> A Beacon of Hope and Health</p>
           <p className="text-wrapper-19">
             Our Camps are more than just a summer camps—they are a vital part of our mission to empower young lives
             touched by diabetes. As a volunteer, you play a pivotal role in this transformative journey, helping to
             shape a brighter, healthier future for children in South Texas and beyond.
           </p>
         </div>
-        <Button className="button-10" divClassName="button-11" property1="line" />
+        <MuiButton className="button button-2" variant="contained">Learn More </MuiButton>
       </div>
     </StyledAboutUsSection>
   );

@@ -31,6 +31,10 @@ const StyledTitleTextsButton = styled.div`
     font-weight: var(--heading-1-font-weight);
     letter-spacing: var(--heading-1-letter-spacing);
     line-height: var(--heading-1-line-height);
+    @media (max-width: 768px) {
+      font-size: var(--heading-3-font-size);
+      line-height: var(--heading-5-line-height);
+    }
   }
 
   & .text-wrapper-12 {
@@ -41,6 +45,10 @@ const StyledTitleTextsButton = styled.div`
     font-weight: var(--heading-1-font-weight);
     letter-spacing: var(--heading-1-letter-spacing);
     line-height: var(--heading-1-line-height);
+    @media (max-width: 768px) {
+      font-size: var(--heading-3-font-size);
+      line-height: var(--heading-5-line-height);
+    }
   }
 
   & .text-buttons {

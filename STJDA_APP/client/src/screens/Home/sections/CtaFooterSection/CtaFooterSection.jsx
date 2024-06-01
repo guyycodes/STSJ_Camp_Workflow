@@ -40,20 +40,16 @@ const StyledCtaFooterSection = styled.div`
     padding: 24px 24px 0px;
     position: relative;
     width: 100%;
+    border-radius: 35%;
+    @media (max-width: 768px) {
+
+    }
   }
+  
 
   & .photo-4 {
-    align-items: flex-start;
-    background-image: url(https://c.animaapp.com/I4tqUSkw/img/photo-3.png);
-    background-position: 50% 50%;
-    background-size: cover;
-    border-radius: 25px;
-    display: flex;
-    flex-direction: column;
-    height: 430px;
-    padding: 16px;
-    position: relative;
-    width: 1192px;
+    // background-image: url(https://c.animaapp.com/I4tqUSkw/img/photo-3.png);
+    width: auto;
   }
 
   & .text-5 {
@@ -63,6 +59,7 @@ const StyledCtaFooterSection = styled.div`
     display: inline-flex;
     flex: 0 0 auto;
     padding: 8px 24px;
+    margin: 0 auto 0 0;
     position: relative;
   }
 
@@ -324,8 +321,8 @@ export const CtaFooterSection = () => {
             </div>
           </div>
           <div className="title">
-            <p className="text-wrapper-21">Be part of a Childs Hope Today</p>
-            <p className="text-wrapper-22">Empower Families, Inspire Children, and Build a Healthier Community.</p>
+            {/* <p className="text-wrapper-21">Be part of a Childs Hope Today</p> */}
+            {/* <p className="text-wrapper-22">Empower Families, Inspire Children, and Build a Healthier Community.</p> */}
           </div>
           <div className="button-12" />
         </div>

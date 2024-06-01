@@ -20,6 +20,8 @@ const StyledItems = styled.div`
     background-image: url(https://c.animaapp.com/I4tqUSkw/img/photo-4@2x.png) !important;
     background-position: 50% 50% !important;
     background-size: cover !important;
+    height: 60%; /* Added for visibility */
+    width: 100%; /* Added for visibility */
   }
 
   & .card-instance {
@@ -38,6 +40,8 @@ const StyledItems = styled.div`
     background-image: url(https://c.animaapp.com/I4tqUSkw/img/photo-5@2x.png) !important;
     background-position: 50% 50% !important;
     background-size: cover !important;
+    height: 60%; /* Added for visibility */
+    width: 100%; /* Added for visibility */
   }
 `;
 
