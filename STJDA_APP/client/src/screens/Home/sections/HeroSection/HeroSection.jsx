@@ -1,5 +1,5 @@
 import React from "react";
-import { DonationSection } from "./sections/DonationSection/DonationSection";
+import { CampsSection } from "./sections/CampsSection/CampsSection";
 import { Navigation } from "./sections/Navigation";
 import { PhotoNumbers } from "./sections/PhotoNumbers";
 import { TitleTextsButton } from "./sections/TitleTextButtons";
@@ -47,7 +47,7 @@ export const HeroSection = () => {
       <div className="play-button">
         <img className="vector" alt="Vector" src="https://c.animaapp.com/I4tqUSkw/img/vector.svg" />
       </div>
-      <DonationSection />
+      <CampsSection />
     </StyledHeroSection>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../../../../../../components/Button";
+import { Button as MUIButton } from "@mui/material";
 import styled from "styled-components";
 
 const StyledTitleTextsButton = styled.div`
@@ -82,15 +82,6 @@ const StyledTitleTextsButton = styled.div`
     position: relative;
   }
 
-  & .button-7 {
-    background-color: #1479cc !important;
-    flex: 0 0 auto !important;
-  }
-
-  & .button-8 {
-    border-color: var(--black) !important;
-    flex: 0 0 auto !important;
-  }
 
   & .button-9 {
     color: var(--black) !important;
@@ -114,8 +105,8 @@ export const TitleTextsButton = () => {
           affected by diabetes.
         </p>
         <div className="buttons">
-          <Button className="button-7" property1="filled" />
-          <Button className="button-8" divClassName="button-9" property1="line" />
+          <MUIButton variant="contained" style={{ backgroundColor: '#1479cc' }}>Learn More</MUIButton>
+          <MUIButton variant="outlined" style={{ borderColor: 'var(--black)', color: 'var(--black)' }}>Donate</MUIButton>
         </div>
       </div>
     </StyledTitleTextsButton>

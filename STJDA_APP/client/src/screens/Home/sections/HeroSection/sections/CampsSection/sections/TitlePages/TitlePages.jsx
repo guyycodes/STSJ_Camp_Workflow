@@ -57,10 +57,11 @@ const StyledTitlePages = styled.div`
   }
 
   & .left-arrow {
-    height: 14.73px;
-    margin-left: -1px;
+    height: auto;
+    margin-left: auto;
     position: relative;
-    width: 49px;
+    width: auto;
+    opacity: 0;
   }
 
   & .right-arrow {

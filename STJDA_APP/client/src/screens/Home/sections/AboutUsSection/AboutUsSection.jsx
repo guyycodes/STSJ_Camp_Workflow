@@ -1,7 +1,7 @@
 import React from "react";
-
 import styled from "styled-components";
 import { Button as MuiButton, Menu, MenuItem } from '@mui/material';
+import { MySvg } from "../../../../assets/littleSvg";
 
 const StyledAboutUsSection = styled.div`
   align-items: center;
@@ -217,7 +217,7 @@ export const AboutUsSection = () => {
         </div>
         <div className="numbers-photo">
           <div className="numbers-2">
-            <img className="vector-2" alt="Vector" src="https://c.animaapp.com/I4tqUSkw/img/vector-1.svg" />
+          <MySvg className="vector-2" alt="Vector" />
             <div className="text-3">
               <div className="text-wrapper-17">1.1 Million</div>
               <p className="children-are-living">
@@ -226,7 +226,7 @@ export const AboutUsSection = () => {
               </p>
             </div>
           </div>
-          <img className="photo-3" alt="Photo" src="https://c.animaapp.com/I4tqUSkw/img/photo-2.png" />
+          <img className="photo-3" alt="Photo" src="https://imgur.com/CodgROb.png" />
         </div>
       </div>
       <div className="contents-2">
