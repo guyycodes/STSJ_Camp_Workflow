@@ -4,6 +4,7 @@ import App from './App.jsx';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material'
 import { registerSW } from 'virtual:pwa-register';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Create a custom theme with global styles
 const muiTheme = createTheme({
@@ -49,7 +50,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <MuiThemeProvider theme={muiTheme}>
       <CssBaseline /> {/* Normalize the CSS and add global styles */}
+      <GoogleOAuthProvider clientId={`784750802827-1g450b08l5j16i1beene0hklrgl1gfe8.apps.googleusercontent.com`}>
       <App />
+      </GoogleOAuthProvider>
     </MuiThemeProvider>
   </React.StrictMode>,
 );
