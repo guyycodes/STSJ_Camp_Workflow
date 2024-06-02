@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../../../../components/Button";
+import { Button as MUIButton } from "@mui/material";
 import styled from "styled-components";
 
 const StyledCtaFooterSection = styled.div`
@@ -320,11 +320,6 @@ export const CtaFooterSection = () => {
               <div className="text-wrapper-20">Camp Freedom 2023</div>
             </div>
           </div>
-          <div className="title">
-            {/* <p className="text-wrapper-21">Be part of a Childs Hope Today</p> */}
-            {/* <p className="text-wrapper-22">Empower Families, Inspire Children, and Build a Healthier Community.</p> */}
-          </div>
-          <div className="button-12" />
         </div>
       </div>
       <div className="footer-section">
@@ -342,7 +337,21 @@ export const CtaFooterSection = () => {
             <div className="email-address">
               <p className="text-wrapper-23">Enter your email address ...</p>
             </div>
-            <Button className="button-13" property1="filled" text2="Subscribe" />
+            <MUIButton
+                style={{
+                  margin: '0 0 0 4px',
+                  backgroundColor: '#1479cc', 
+                  color: '#FFFFFF', 
+                  padding: '12px 32px', 
+                  position: 'absolute', 
+                  top: '60px', 
+                  left: '545px', 
+                  borderRadius: '50px', 
+                }}
+                variant="contained"
+              >
+                Subscribe
+              </MUIButton>
             <div className="text-wrapper-24">Subscribe to Newsletter</div>
           </div>
         </div>

@@ -13,7 +13,7 @@ const StyledDonationSection = styled.div`
   width: 100%;
 `;
 
-export const DonationSection = () => {
+export const CampsSection = () => {
   return (
     <StyledDonationSection>
       <TitlePages />

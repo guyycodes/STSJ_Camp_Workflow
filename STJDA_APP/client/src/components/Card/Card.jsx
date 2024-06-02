@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Button } from "../Button";
 import styled from "styled-components";
 
 const StyledCard = styled.div`
@@ -16,7 +15,7 @@ const StyledCard = styled.div`
   width: 400px;
 
   & .photo {
-    background-color: #d9d9d9;
+    // background-color: #d9d9d9;
     border-radius: 25px;
     flex: 0 0 auto;
     position: relative;
@@ -77,25 +76,24 @@ const StyledCard = styled.div`
     position: relative;
   }
 
-  & .progress-bar {
-    background-image: url(https://c.animaapp.com/I4tqUSkw/img/progress-bar-1@2x.png);
-    background-position: 50% 50%;
-    background-size: cover;
-    border-radius: 50px;
-    height: 8px;
-    position: relative;
-    width: 368px;
-  }
+  // & .progress-bar {
+  //   background-position: 50% 50%;
+  //   background-size: cover;
+  //   border-radius: 50px;
+  //   height: 8px;
+  //   position: relative;
+  //   width: 368px;
+  // }
 
-  & .amount-reached {
-    align-items: flex-end;
-    align-self: stretch;
-    display: flex;
-    flex: 0 0 auto;
-    justify-content: space-between;
-    position: relative;
-    width: 100%;
-  }
+  // & .amount-reached {
+  //   align-items: flex-end;
+  //   align-self: stretch;
+  //   display: flex;
+  //   flex: 0 0 auto;
+  //   justify-content: space-between;
+  //   position: relative;
+  //   width: 100%;
+  // }
 
   & .div {
     align-items: flex-start;
@@ -145,20 +143,24 @@ const StyledCard = styled.div`
     position: absolute;
     top: 32px;
     width: 336px;
+
   }
 
   & .education-wrapper {
     align-items: center;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 100%);
-    border: 1px solid;
     border-color: transparent;
-    border-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1)) 1;
     border-radius: 50px;
     display: inline-flex;
     flex: 0 0 auto;
     justify-content: center;
     padding: 8px 24px;
     position: relative;
+    transition: background 0.3s ease, transform 0.3s ease; 
+  }
+
+  & .education-wrapper:hover {
+    transform: scale(1.05);
+    cursor: pointer;
   }
 
   & .education {
@@ -173,6 +175,11 @@ const StyledCard = styled.div`
     position: relative;
     white-space: nowrap;
     width: fit-content;
+    transition: color 0.3s ease;
+  }
+
+  & .education:hover {
+    color: var(--black);
   }
 
   & .save-button {
@@ -194,15 +201,13 @@ export const Card = ({
   property1,
   className,
   photoClassName,
-  text = "Accessible Education for<br/>All People of Colors",
+  text,
   text1 = "Our project aims to provide worldwide access to educational resources, helping break the cycle of poverty especially in vulnerable communities.",
-  hasProgressBar = true,
-  hasAmountReached = true,
-  buttonText = "Donate",
+  hasProgressBar = false,
+  hasAmountReached = false,
+  buttonComponent,
   textClassName,
-  text2 = "Education",
-  saveButton = "https://c.animaapp.com/I4tqUSkw/img/save-button.svg",
-  img = "https://c.animaapp.com/I4tqUSkw/img/save-button-1.svg",
+  text2,
 }) => {
   return (
     <StyledCard className={`card ${property1} ${className}`}>
@@ -223,7 +228,7 @@ export const Card = ({
               </div>
             )}
 
-            <Button className="button-instance" property1="short" text1={buttonText} />
+            {buttonComponent}
           </div>
         </div>
       </div>
@@ -231,7 +236,7 @@ export const Card = ({
         <div className={`education-wrapper ${textClassName}`}>
           <div className="education">{text2}</div>
         </div>
-        <img className="save-button" alt="Save button" src={property1 === "ver-2" ? img : saveButton} />
+        <img className="save-button" src={property1 === "ver-2" ? img : null} />
       </div>
     </StyledCard>
   );
