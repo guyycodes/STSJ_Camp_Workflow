@@ -2,6 +2,63 @@ import React from "react";
 import { Button as MUIButton } from "@mui/material";
 import styled from "styled-components";
 
+export const CtaFooterSection = () => {
+  return (
+    <StyledCtaFooterSection>
+      <div className="CTA-section">
+        <div className="contents-3">
+          <div className="photo-4">
+            <div className="text-5">
+              <div className="text-wrapper-20">Camp Freedom 2023</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="footer-section">
+        <div className="texts-newsletter">
+          <div className="texts">
+            <p className="STJDA-is-a-non">
+              STJDA is a non-profit organization dedicated to empowering families touched by juvenile diabetes,
+              <br /> and promoting healthier lifestyles that benefit our entire community..
+            </p>
+            <div className="menu-2">
+              <div className="text-wrapper-20">Contact Us</div>
+            </div>
+          </div>
+          <div className="newsletter">
+            <div className="email-address">
+              <p className="text-wrapper-23">Enter your email address ...</p>
+            </div>
+            <MUIButton
+                style={{
+                  margin: '0 0 0 4px',
+                  backgroundColor: '#1479cc', 
+                  color: '#FFFFFF', 
+                  padding: '12px 32px', 
+                  position: 'absolute', 
+                  top: '60px', 
+                  left: '545px', 
+                  borderRadius: '50px', 
+                }}
+                variant="contained"
+              >
+                Subscribe
+              </MUIButton>
+            <div className="text-wrapper-24">Subscribe to Newsletter</div>
+          </div>
+        </div>
+        <div className="copyright-policy">
+          <div className="line-2" />
+          <div className="texts-2">
+            <p className="text-wrapper-25">Copyright © STJDA 2023. All rights reserved.</p>
+            <p className="privacy-policy-user">Privacy Policy | User Policy | Terms &amp; Condition</p>
+          </div>
+        </div>
+      </div>
+    </StyledCtaFooterSection>
+  );
+};
+
 const StyledCtaFooterSection = styled.div`
   align-items: flex-start;
   align-self: stretch;
@@ -309,60 +366,3 @@ const StyledCtaFooterSection = styled.div`
     width: fit-content;
   }
 `;
-
-export const CtaFooterSection = () => {
-  return (
-    <StyledCtaFooterSection>
-      <div className="CTA-section">
-        <div className="contents-3">
-          <div className="photo-4">
-            <div className="text-5">
-              <div className="text-wrapper-20">Camp Freedom 2023</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="footer-section">
-        <div className="texts-newsletter">
-          <div className="texts">
-            <p className="STJDA-is-a-non">
-              STJDA is a non-profit organization dedicated to empowering families touched by juvenile diabetes,
-              <br /> and promoting healthier lifestyles that benefit our entire community..
-            </p>
-            <div className="menu-2">
-              <div className="text-wrapper-20">Contact Us</div>
-            </div>
-          </div>
-          <div className="newsletter">
-            <div className="email-address">
-              <p className="text-wrapper-23">Enter your email address ...</p>
-            </div>
-            <MUIButton
-                style={{
-                  margin: '0 0 0 4px',
-                  backgroundColor: '#1479cc', 
-                  color: '#FFFFFF', 
-                  padding: '12px 32px', 
-                  position: 'absolute', 
-                  top: '60px', 
-                  left: '545px', 
-                  borderRadius: '50px', 
-                }}
-                variant="contained"
-              >
-                Subscribe
-              </MUIButton>
-            <div className="text-wrapper-24">Subscribe to Newsletter</div>
-          </div>
-        </div>
-        <div className="copyright-policy">
-          <div className="line-2" />
-          <div className="texts-2">
-            <p className="text-wrapper-25">Copyright © STJDA 2023. All rights reserved.</p>
-            <p className="privacy-policy-user">Privacy Policy | User Policy | Terms &amp; Condition</p>
-          </div>
-        </div>
-      </div>
-    </StyledCtaFooterSection>
-  );
-};

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Container} from '@mui/material';
+import { Box} from '@mui/material';
 import {LandingPage} from './screens/Home/Landing';
-import { SignInForm } from './screens/Login/SignInForm';
+import { SignUpSection } from './screens/Login/SignUpSection';
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 function App() {
 
@@ -12,7 +12,7 @@ function App() {
         <Route path="/" index element={<LandingPage />} />
           {/* to-do */}
           {/* to-do finsih responsive styling for mobile/tablets */}
-          <Route path="/Login" index element={<SignInForm />} />
+          <Route path="/Login" index element={<SignUpSection />} />
           {/* <Route path="/gallery" index element={<Home />} /> */}
           {/* <Route path="/blog" index element={<Home />} /> */}
      
@@ -31,11 +31,11 @@ function App() {
 
   return (
     <>
-        <Container>
+     
 
         <RouterProvider router={router}/> 
          
-        </Container>
+   
     </>
   );
 }
