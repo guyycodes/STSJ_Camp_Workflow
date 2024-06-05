@@ -2,13 +2,13 @@ import express from "express";
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from "@apollo/server/standalone";
 import path from "path";
-import connectDB from './config/connection.js'
+// import connectDB from './config/connection.js'
 import cors from 'cors';
 import { config } from 'dotenv';
 import { fileURLToPath } from 'url';
 import typeDefs from './schema/typeDefs.js'
 import resolvers from './schema/resolvers.js'
-import { auth } from "./utils/authenticate.js"
+import { auth } from "./utils/auth/authenticate.js"
 
 // import { readFileSync } from "fs";
 // import connectDB from './config/connection.js'
@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 
 async function startApolloServer() {
   try {
-      const server = new ApolloServer({
+        const server = new ApolloServer({
           typeDefs,
           resolvers,
           persistedQueries: false,
@@ -50,7 +50,7 @@ async function startApolloServer() {
           context: auth,
       });
 
-      const { url } = await server.startStandaloneServer(server);  // Ensuring this line correctly invokes start
+      const { url } = await startStandaloneServer(server);  // Ensuring this line correctly invokes start
       console.log(`
       🚀  Apollo Standalone Server is running!
       📭  Query at ${url}
@@ -59,9 +59,6 @@ async function startApolloServer() {
       console.error("Failed to start Apollo Server", error);
       // Redirect to an error page. The specific method depends on your environment.
       // For example, in a Node.js environment you might send a static HTML file:
-      const path = require('path');
-      const express = require('express');
-      const app = express();
 
       app.use((req, res, next) => {
           res.status(500).sendFile(path.join(__dirname, 'public', 'error.html'));
