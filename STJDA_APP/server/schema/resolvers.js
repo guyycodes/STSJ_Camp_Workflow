@@ -1,4 +1,4 @@
-import { signTheToken } from '../utils/authenticate.js'
+import { signTheToken } from '../utils/auth/authenticate.js'
 // import { AuthenticationError } from 'apollo-server-express'
 import Service from "../models/services.js";
 import User from '../models/user.js'
@@ -14,18 +14,18 @@ const resolvers = {
         throw new Error("Failed to fetch services.");
       }
     },
-    service: async (_, { id }) =>{
-      try{
+    service: async (_, { id }) => {
+      try {
         return await Service.findById(id);
-      }catch(error){
+      } catch (error) {
         console.log(error)
         throw new Error(`Failed to fetch service with id: ${id}`)
       }
     },
-    me: async (_, args, context ) => {
+    me: async (_, args, context) => {
       try {  // the context contains the JWT
         // console.log("Looking for user with ID:", context.user._id);                 
-        const user = await User.findOne({_id: context.user._id  });  // grabbing the info from inside the JWT
+        const user = await User.findOne({ _id: context.user._id });  // grabbing the info from inside the JWT
         // console.log("Found user:", user);
         return user;
 
@@ -33,9 +33,9 @@ const resolvers = {
         throw new Error(`User not found: ${error.message}`);
       }
     },
-    unconfirmedAppointments: async (_, {confirm}) => {
+    unconfirmedAppointments: async (_, { confirm }) => {
       try {
-        return await Appointment.find({confirm});
+        return await Appointment.find({ confirm });
       } catch (error) {
         console.log(error);
         throw new Error("Failed to fetch appointments.");
@@ -56,17 +56,17 @@ const resolvers = {
         const service = new Service({
           title: args.title,
           description: args.description,
-          price: args.price, 
+          price: args.price,
           image: args.image
         });
-  
+
         return await service.save();
       } catch (error) {
         console.log(error)
         throw new Error("Failed to add service.");
       }
     },
-    updateService: async (_, args ) => { 
+    updateService: async (_, args) => {
       console.log(args)
       const { id, ...rest } = args;
       try {
@@ -84,9 +84,9 @@ const resolvers = {
         throw new Error(`Failed to delete service with id: ${id}`);
       }
     },
-      // The function takes three arguments: _ (an unused placeholder for the "root" object, which is typically not used in a mutation), { email, password } (the actual variables we're interested in), and context (which can provide additional information, like authentication state).
+    // The function takes three arguments: _ (an unused placeholder for the "root" object, which is typically not used in a mutation), { email, password } (the actual variables we're interested in), and context (which can provide additional information, like authentication state).
     // loginUser : async (_, { email, password },  context) => {
-  
+
     //   const user  = await User.findOne({ email});
 
     //   if (!user) {
@@ -94,7 +94,7 @@ const resolvers = {
     //   }
     //   // const correctPw = await user.isCorrectPassword(password); Checks if the password is correct. lowercase user.isPasswordCorrect is targeting the instance method on the object.
     //   const correctPw = await user.isPasswordCorrect(password); 
-      
+
 
     //   if (!correctPw) {
     //     throw new AuthenticationError('Incorrect password!');
@@ -108,7 +108,7 @@ const resolvers = {
     // },
     updateAppointment: async (_, { _id, confirm }) => {
       try {
-        return await Appointment.findByIdAndUpdate({_id}, {confirm}, {
+        return await Appointment.findByIdAndUpdate({ _id }, { confirm }, {
           new: true
         });
       } catch (err) {
@@ -137,7 +137,7 @@ const resolvers = {
           contactMethod: args.contactMethod,
           timeWindow: args.timeWindow
         });
-  
+
         return await appointment.save();
       } catch (error) {
         console.log(error)
@@ -145,5 +145,5 @@ const resolvers = {
       }
     },
   }
-}; 
+};
 export default resolvers;
