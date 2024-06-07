@@ -1,8 +1,8 @@
-import { signTheToken } from '../utils/authenticate.js'
+import { signTheToken } from '../utils/auth/authenticate.js'
 // import { AuthenticationError } from 'apollo-server-express'
-import Service from "../models/services.js";
-import User from '../models/user.js'
-import Appointment from '../models/appointments.js';
+// import Service from "../models/services.js";
+// import User from '../models/user.js'
+// import Appointment from '../models/appointments.js';
 
 const resolvers = {
   Query: {
