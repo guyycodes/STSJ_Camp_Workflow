@@ -2,6 +2,19 @@ import express from "express";
 
 const router = express.Router();
 
+// google auth route
+router.post("/auth/google", async (req, res, next) => {
+  const { code } = req.body;
+
+  try {
+    const token = await googleAuth(code);
+    res.json({ token });
+  } catch (error) {
+    next(error); // pass error to centralized error handler
+  }
+});
+
+// email route
 router.post("/", (req, res) => {
   console.info("Get was used");
   console.log("This email will be contact: " + req.body.email);
@@ -23,6 +36,7 @@ router.post("/", (req, res) => {
   res.json({ message: "Everything went okay" });
 });
 
+// health check endpoint
 router.get("/health", (req, res) => {
   res.status(200).send("Healthy");
 });

@@ -9,6 +9,7 @@ import typeDefs from "./schema/typeDefs.js";
 import resolvers from "./schema/resolvers.js";
 import { auth } from "./utils/auth/authenticate.js";
 import routes from "./routes/index.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 // import connectDB from './config/connection.js'
 // import { readFileSync } from "fs";
