@@ -46,6 +46,9 @@ app.use((req, res, next) => {
 // Routes
 app.use("/api", routes);
 
+// Error handler middleware
+app.use(errorHandler);
+
 // Serve static assets in production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/dist")));
@@ -150,4 +153,3 @@ startApolloServer();
 //   }
 // })();
 //
-
