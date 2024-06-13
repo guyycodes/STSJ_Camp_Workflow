@@ -20,8 +20,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 
 config({ path: ".env" });
 
-const PORT = process.env.PORT || 3001; // Default to 3001 if process.env.PORT is not set
-
+const PORT = process.env.PORT || 3000; // Default to 3000 if process.env.PORT is not set
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
