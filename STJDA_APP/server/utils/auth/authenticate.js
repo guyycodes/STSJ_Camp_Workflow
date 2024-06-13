@@ -1,8 +1,18 @@
 import jwt from "jsonwebtoken";
+import axios from "axios";
+import querystring from "querystring";
+import { google } from 'googleapis';
 
 // set token secret and expiration date
 const secret = "mysecretsshhhhh";
 const expiration = "2h";
+
+// create a google oauth client
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.REDIRECT_URI
+);
 
 // change to object request
 // function for our authenticated routes
@@ -37,41 +47,50 @@ const signTheToken = ({ username, email, _id }) => {
   return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
 };
 
+// function to get user data from google
+async function getUserData(access_token){
+  const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token${access_token}`);
+  const data = await response.json();
+  console.log("Data received from Google: ", data)
+}
+
 // function to handle Google auth
 const googleAuth = async (code) => {
+
+  console.log("Code received from frontend: ", code)
+  console.log("Client ID: ", process.env.GOOGLE_CLIENT_ID)
+  console.log("Client Secret: ", process.env.GOOGLE_CLIENT_SECRET)
+  console.log("Redirect URI: ", process.env.REDIRECT_URI)
+
   try {
     // exchange auth code for tokens
-    const response = await axios.post(
-      "https://oath2.googleapis.com/token",
-      null,
-      {
-        params: {
-          code,
-          client_id: process.env.GOOGLE_CLIENT_ID,
-          client_secret: process.env.GOOGLE_CLIENT_SECRET,
-          redirect_uri: "REDIRECT_URI", // needs to match redirect uri set up in google api console
-          grant_type: "authorization_code",
-        },
-      },
-    );
+    const {tokens} = await oauth2Client.getToken(code);
+    await oauth2Client.setCredentials(tokens);
+    console.log("Tokens received: ", tokens)
 
-    const { id_token } = response.data;
+    const user = oauth2Client.credentials
+    console.log("User: ", user)
 
-    // verify id token
-    const ticket = await axios.get(
-      `https://oauth2.googleapis.com/tokeninfo?id_token=${id_token}`,
-    );
-    const payload = ticket.data;
+    await getUserData(user.access_token)
 
-    // create jwt
-    const token = signTheToken({
-      username: payload.name,
-      email: payload.email,
-      _id: payload.sub,
-    });
+    // const { id_token } = response.data;
 
-    return token;
+    // // verify id token
+    // const ticket = await axios.get(
+    //   `https://oauth2.googleapis.com/tokeninfo?id_token=${id_token}`,
+    // );
+    // const payload = ticket.data;
+
+    // // create jwt
+    // const token = signTheToken({
+    //   username: payload.name,
+    //   email: payload.email,
+    //   _id: payload.sub,
+    // });
+
+    // return token;
   } catch (error) {
+    console.log(error);
     throw new Error("Failed to authenticate with Google");
   }
 };
