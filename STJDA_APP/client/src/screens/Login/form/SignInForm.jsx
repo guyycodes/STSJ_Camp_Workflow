@@ -1,44 +1,42 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import styled from "styled-components";
 import {
-  TextField,
-  Button,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Typography,
-  Box,
-} from "@mui/material";
-import { useGoogleLogin } from "@react-oauth/google";
-import { validate } from "../../../util/validateLogin/validateLogin.js";
-import axios from "axios";
+    TextField,
+    Button,
+    FormControlLabel,
+    Checkbox,
+    Link,
+    Typography,
+    Box,
+  } from "@mui/material";
+import { validate } from '../../../util/validateLogin/validateLogin.js'
 
-export const SignInForm = () => {
+export const SignInForm = ({ createUser }) => {
+
   const loginFormRef = useRef(null);
   const storedRememberMe = localStorage.getItem("STJDArememberMe") === "true";
-  const storedEmail = storedRememberMe
-    ? localStorage.getItem("STJDAemail")
-    : "";
-  const storedPassword = storedRememberMe
-    ? localStorage.getItem("STJDApassword")
-    : "";
+  const storedEmail = storedRememberMe ? localStorage.getItem("STJDAemail") : "";
+  const storedPassword = storedRememberMe ? localStorage.getItem("STJDApassword") : "";
   const storeJWT = storedRememberMe ? localStorage.getItem("STJDA_JWT") : "";
-
-  const [rememberMe, setRememberMe] = useState(
-    localStorage.getItem("STJDArememberMe") === "true",
-  );
-  const [email, setEmail] = useState(storedEmail);
-  const [password, setPassword] = useState(storedPassword);
-  const [jwt, setJWT] = useState(storeJWT);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [rememberMe, setRememberMe] = useState(localStorage.getItem("STJDArememberMe") === "true");
+  const [email, setEmail] = useState(storedEmail);
+  const [password, setPassword] = useState(storedPassword);
+
+  let oAuth2Client;
+  const [credentials, setCredentials] = useState();
+  const [jwt, setJWT] = useState(storeJWT);
   const [showAlert, setShowAlert] = useState(false);
   const [errorMsg, setErrorMsg] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const[errorMessage, setErrorMessage] = useState("");
 
   // const [loginUser, { loading: updateLoading, error: updateError }] = useMutation(LOGIN_USER);
 
   useEffect(() => {
+      // make a function to calle the backend and get the credentials
+  // make the function grab the credentials run on the useEffect
+  // sett the URL for oauth to the Google button
     if (rememberMe) {
       localStorage.setItem("STJDAemail", email);
       localStorage.setItem("STJDApassword", password);
@@ -54,172 +52,156 @@ export const SignInForm = () => {
     event.preventDefault();
     const loginForm = loginFormRef.current;
 
-    validate(email, password, loginForm);
+    validate(email, password, loginForm)
 
     console.log(email, password);
-  };
+  }
 
   const handleRememberMe = (event) => {
     setRememberMe(event.target.checked);
-    console.log(event.target.checked);
+    console.log(event.target.checked)
   };
 
   function testEmailInput(event) {
     const result = emailRegex.test(event.target.value);
-    !result
-      ? setEmailError(true)
-      : (setEmailError(false), setEmail(event.target.value));
+    (!result) ? (setEmailError(true)) : (
+      setEmailError(false),
+      setEmail(event.target.value)
+    );
   }
 
-  const handlePassword = (event) => {
+  const handlePassword = (event) =>{
     const { value } = event.target;
-    setPassword(value);
-  };
+    setPassword(value)
+  }
 
   const handleEmail = (event) => {
     const { value } = event.target;
     setEmail(value);
-  };
+  }
 
-  const oAuthLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      console.log("Token Response:", tokenResponse);
-
-      if (tokenResponse.code) {
-        console.log("Auth Code:", tokenResponse.code);
-        try {
-          const result = await axios.post(
-            "http://localhost:3000/api/auth/google",
-            {
-              code: tokenResponse.code,
-            },
-          );
-
-          console.log("Result received:", result);
-
-          const { token } = result.data;
-          console.log("Token received:", token);
-
-    //       localStorage.setItem("STJDA_JWT", token);
-    //       setJWT(token);
-        } catch (error) {
-          console.error("Login failed", error);
+  async function fetchGoogleAuth() {
+    try {
+        // Make an HTTP GET request to the Google auth endpoint
+        const response = await fetch('http://localhost:3000/api/auth/google');
+        // Check if the fetch was successful
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
-      } else {
-        console.error("No Auth Code Received");
-      }
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error('Failed to fetch from Google Auth API:', error);
+    }
+  }
 
-    //   if (tokenResponse.id_token) {
-    //     const decodedToken = jwtDecode(tokenResponse.id_token);
-    //     console.log("Decoded Token:", decodedToken);
-    //     console.log("Email:", decodedToken.email);
-    //     console.log("Name:", decodedToken.name);
-    //   }
-    },
-    onError: () => console.log("Login Failed"),
-    flow: "auth-code",
-    clientId:
-      "784750802827-1g450b08l5j16i1beene0hklrgl1gfe8.apps.googleusercontent.com",
-    redirectUri: "http://localhost:3000/api/auth/google",
-    scope: "openid email profile",
-  });
-
-  return (
-    <StyledFrame>
-      <div className="sign-in-forms-wrapper">
-        <div className="sign-in-forms">
-          <div className="sign-in-form-web">
-            <div className="div">
-              <Typography variant="h4" className="element">
-                Welcome!
-              </Typography>
-              <div className="div-2">
-                <div className="div-3">
-                  <TextField
-                    ref={loginFormRef}
-                    label="Email"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    value={email}
-                    onChange={handleEmail} // Corrected to use handleEmailInput
-                    error={emailError}
-                  />
-                  <TextField
-                    label="Password"
-                    variant="outlined"
-                    type="password"
-                    fullWidth
-                    margin="normal"
-                    value={password}
-                    onChange={handlePassword} // Corrected to use handleEmailInput
-                    error={passwordError}
-                  />
-                </div>
-                <div className="div-5">
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="Remember me"
-                    className="switcher-item-left"
-                  />
-                  <Link href="#" className="description-2">
-                    Forgot password?
-                  </Link>
+  const oAuthLogin = async() =>{
+    try{
+      await fetchGoogleAuth()
+      .then((data) => {
+        window.location.href = data;
+      })
+      .catch((error) => {
+        console.error('Failed to fetch credentials:', error);
+      });
+    }catch(error){
+      console.log("Error")
+    }
+  }
+    return (
+      <StyledFrame>
+        <div className="sign-in-forms-wrapper">
+          <div className="sign-in-forms">
+            <div className="sign-in-form-web">
+              <div className="div">
+                <Typography variant="h4" className="element">
+                  Welcome!
+                </Typography>
+                <div className="div-2">
+                  <div className="div-3">
+                    <TextField
+                      ref={loginFormRef}
+                      label="Email"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      value={email}
+                      onChange={handleEmail} // Corrected to use handleEmail
+                      error={emailError} 
+                    />
+                    <TextField
+                      label="Password"
+                      variant="outlined"
+                      type="password"
+                      fullWidth
+                      margin="normal"
+                      value={password}
+                      onChange={handlePassword} // Corrected to use handlePass
+                      error={passwordError} 
+                    />
+                  </div>
+                  <div className="div-5">
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Remember me"
+                      className="switcher-item-left"
+                      onChange={handleRememberMe}
+                    />
+                    <Link href="#" className="description-2">
+                      Forgot password?
+                    </Link>
+                  </div>
                 </div>
               </div>
+              <Button onClick={handleSubmit} variant="contained" fullWidth className="primary-button">
+                Sign In
+              </Button>
+              <div className="nav" />
+              <div className="div-6">
+                <Button
+                  variant="contained"
+                  fullWidth
+                  className="google-big-button"
+                  onClick={oAuthLogin}
+                  startIcon={
+                    <img
+                      className="other-sign-in-method"
+                      alt="Other pay method"
+                      src="https://imgur.com/FOF6Hyq.png"
+                    />
+                  }
+                >
+                  Or sign in with Google
+                </Button>
+              </div>
             </div>
-            <Button
-              onClick={handleSubmit}
-              variant="contained"
-              fullWidth
-              className="primary-button"
-            >
-              Sign In
-            </Button>
-            <div className="nav" />
-            <div className="div-6">
-              <Button
-                variant="contained"
-                fullWidth
-                className="google-big-button"
-                onClick={oAuthLogin}
-                startIcon={
-                  <img
-                    className="other-sign-in-method"
-                    alt="Other pay method"
-                    src="https://imgur.com/FOF6Hyq.png"
-                  />
-                }
-              >
-                Or sign in with Google
+            <div className="sign-up-offer">
+              <Typography className="description-3">
+                Don't have an account?
+              </Typography>
+              <Button 
+              className="description-4" 
+              onClick={() => {createUser(true)}}>
+                Sign up now
               </Button>
             </div>
-          </div>
-          <div className="sign-up-offer">
-            <Typography className="description-3">
-              Don't have an account?
-            </Typography>
-            <Link href="#" className="description-4">
-              Sign up now
-            </Link>
-          </div>
-          <a href="https://www.stjda.org">
+            <a  href="https://www.stjda.org">
             <img
               className="screenshot"
               alt="STJDA Logo"
               src="https://imgur.com/1MeimfQ.png"
             />
-          </a>
+            </a>
+          </div>
         </div>
-      </div>
-      <Box className="bottom-panel">
-        <Typography className="head"></Typography>
-      </Box>
-    </StyledFrame>
-  );
-};
+        <Box className="bottom-panel">
+          <Typography className="head"></Typography>
+        </Box>
+      </StyledFrame>
+    );
+  };
 
-const StyledFrame = styled.div`
+  const StyledFrame = styled.div`
   align-items: flex-start;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -232,7 +214,8 @@ const StyledFrame = styled.div`
   height: fit-content;
   border: 1px solid #d9d9d9;
   border-radius: 8px;
-  //
+  // 
+
 
   & .sign-in-forms-wrapper {
     align-items: flex-start;
@@ -408,7 +391,7 @@ const StyledFrame = styled.div`
   }
 
   @media (max-width: 400px) {
-    & .google-big-button {
+    & .google-big-button  {
       transform: translateY(calc(100vh - 103vh));
     }
   }
@@ -461,6 +444,7 @@ const StyledFrame = styled.div`
     text-align: right;
     white-space: nowrap;
     width: fit-content;
+    padding:0;
   }
 
   & .screenshot {
@@ -472,13 +456,13 @@ const StyledFrame = styled.div`
   }
 
   @media (max-width: 768px) {
-    & .screenshot {
+    & .screenshot  {
       transform: scale(0.7) translateY(calc(100vh - 110vh));
     }
   }
 
   @media (max-width: 400px) {
-    & .screenshot {
+    & .screenshot  {
       transform: scale(0.7) translateY(calc(100vh - 120vh));
     }
   }
@@ -495,7 +479,7 @@ const StyledFrame = styled.div`
   }
 
   @media (max-width: 400px) {
-    & .bottom-panel {
+    & .bottom-panel  {
       display: none;
     }
   }

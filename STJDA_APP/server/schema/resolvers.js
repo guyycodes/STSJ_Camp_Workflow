@@ -1,4 +1,5 @@
-import { signTheToken } from '../utils/auth/authenticate.js'
+
+const signTheToken = require('../utils/auth/authenticate.js') 
 // import { AuthenticationError } from 'apollo-server-express'
 // import Service from "../models/services.js";
 // import User from '../models/user.js'
@@ -146,4 +147,4 @@ const resolvers = {
     },
   }
 }; 
-export default resolvers;
+module.exports = resolvers;

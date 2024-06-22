@@ -1,7 +1,10 @@
 import React from 'react';
 import { Box} from '@mui/material';
-import {LandingPage} from './screens/Home/Landing';
-import { SignUpSection } from './screens/Login/SignUpSection';
+import { LandingPage } from './screens/Home/Landing';
+import { ProfileContainer } from './screens/Profile/ProfileContainer';
+import { ProfileRedirect } from './screens/Profile/User/Redirects';
+// import { ProfileLanding } from './screens/Profile/User/ProfileBanner';
+import { SignUpSection, Unauthorized } from './screens/Login';
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 function App() {
 
@@ -12,12 +15,10 @@ function App() {
         <Route path="/" index element={<LandingPage />} />
           {/* to-do */}
           {/* to-do finsih responsive styling for mobile/tablets */}
-          <Route path="/Login" index element={<SignUpSection />} />
-          {/* <Route path="/gallery" index element={<Home />} /> */}
-          {/* <Route path="/blog" index element={<Home />} /> */}
-     
-          {/* <Route path="/contact" index element={<Home />} /> */}
-          {/* <Route path="/search" index element={<Home />} /> */}
+          <Route path="/login" element={<SignUpSection />} />
+          <Route path="/profile" element={<ProfileRedirect />} />
+          <Route path="/profile/authenticated" element={<ProfileContainer />} />
+          <Route path="/error=emailNotVerified" element={<Unauthorized />} />
           {/* Reviews page Route */}
           {/* <Route path="/reviews" element={<ProtectedRoutes element={<Reviews />} />} /> */}
 
