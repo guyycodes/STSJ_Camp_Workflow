@@ -1,5 +1,4 @@
-import { gql } from 'graphql-tag';
-
+const gql = require('graphql-tag');
 
 const typeDefs = gql` #graphql
 
@@ -76,4 +75,4 @@ const typeDefs = gql` #graphql
     }
 `;
 
-export default typeDefs;
+module.exports = typeDefs;

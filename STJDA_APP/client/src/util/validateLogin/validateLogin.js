@@ -19,7 +19,8 @@ const displayErrorMsgs = function (msgs, loginForm) {
     if(node == null) {
         loginForm.parentNode.insertBefore(ul, loginForm)
     } else{
-        node.parentNode.replaceChild(ul, node);
+        // node.parentNode.replaceChild(ul, node);
+        return
     }
 }
 
