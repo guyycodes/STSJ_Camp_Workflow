@@ -4,7 +4,7 @@ import { LandingPage } from './screens/Home/Landing';
 import { ProfileContainer } from './screens/Profile/ProfileContainer';
 import { ProfileRedirect } from './screens/Profile/User/Redirects';
 // import { ProfileLanding } from './screens/Profile/User/ProfileBanner';
-import { SignUpSection, Unauthorized } from './screens/Login';
+import { SignUpSection, ErrorHandler, Error409 } from './screens/Login';
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 function App() {
 
@@ -18,7 +18,9 @@ function App() {
           <Route path="/login" element={<SignUpSection />} />
           <Route path="/profile" element={<ProfileRedirect />} />
           <Route path="/profile/authenticated" element={<ProfileContainer />} />
-          <Route path="/error=emailNotVerified" element={<Unauthorized />} />
+          <Route path="/error=emailNotVerified" element={<ErrorHandler />} />
+          <Route path="/error=Conflict" element={<Error409 />} />
+          
           {/* Reviews page Route */}
           {/* <Route path="/reviews" element={<ProtectedRoutes element={<Reviews />} />} /> */}
 

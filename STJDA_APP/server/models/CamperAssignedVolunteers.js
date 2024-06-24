@@ -4,7 +4,7 @@ class CamperAssignedVolunteers extends Model {}
 
 CamperAssignedVolunteers.init({
     CamperID: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'Camper',
@@ -12,7 +12,7 @@ CamperAssignedVolunteers.init({
       }
     },
     VolunteerID: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'Volunteers',

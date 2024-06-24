@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Container, TextField, Button, Box, Typography, Avatar } from '@mui/material';
 import { motion } from 'framer-motion';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { validateNewAccount } from "../../../util/validateLogin/validateNewAccount";
 
 const pageVariants = {
   initial: { opacity: 0, x: '100%' },
@@ -85,7 +84,7 @@ export const MedicalForm = ({openModal ,handleAcceptTerms ,setTermsAccepted ,for
 
   useEffect(() => {
     // handle logic for sending data off to the server here
-      console.log(medFormData)
+    console.log(medFormData)
   }, [medFormData]);
 
   const handleChange = (event) => {
@@ -94,11 +93,12 @@ export const MedicalForm = ({openModal ,handleAcceptTerms ,setTermsAccepted ,for
             ...medFormData,
             [name]: value
         });
+       
         // Clear error when user starts typing
         clearErrors(name,value)
   }
 
-    const clearErrors = (name, value) => {
+    const clearErrors = () => {
       let err = {};
         // Clear error when user starts typing
         Array.from(loginForm.elements).forEach(element => { // if theres errors put them in an array
@@ -128,7 +128,6 @@ export const MedicalForm = ({openModal ,handleAcceptTerms ,setTermsAccepted ,for
       
        // set the errrors to state
       if (valid) {
-        console.log('Form submitted:', medFormData);
         openModal(true)
       } else {
         // put the errors into the textfeild
@@ -374,7 +373,7 @@ export const MedicalForm = ({openModal ,handleAcceptTerms ,setTermsAccepted ,for
           margin="normal"
           fullWidth
           name="otherDiagnosis"
-          label="Other Diagnosis"
+          label="Diagnoses/Special Needs"
           type="text"
           id="otherDiagnosis"
           autoComplete="otherDiagnosis"

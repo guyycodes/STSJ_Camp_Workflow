@@ -4,7 +4,7 @@ class CamperCamps extends Model {}
 
 CamperCamps.init({
     CamperID: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'Camper',

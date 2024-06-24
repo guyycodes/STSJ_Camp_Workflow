@@ -10,7 +10,7 @@ class LongActingInsulin extends Model {}
       primaryKey: true
     },
     CareDataID: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'CareData',

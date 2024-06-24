@@ -1,5 +1,10 @@
 const sequelize = require('../config/connection.js');
 const { Model, DataTypes } = require('sequelize');
+
+const delay = (time) => {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 class OriginsData extends Model {}
 // after a delay run a hook that links OriginsData ID to the camper table
   OriginsData.init({
@@ -7,10 +12,11 @@ class OriginsData extends Model {}
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      unique: true
     },
     CamperID: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'Camper',
@@ -47,6 +53,42 @@ class OriginsData extends Model {}
       allowNull: true
     }
   }, {
+    hooks: {
+      afterCreate: async (record, options) => {
+        let attempts = 5;
+        while(attempts > 0){
+          try {
+
+            const Camper = record.sequelize.model('Camper');
+            // Attempt to find the Camper on the primary database if possible
+            const camper = await Camper.findOne({ where: { ID: record.CamperID } });
+
+            if (!camper) {
+              console.log("No camper found with that email, retrying...");
+              attempts--;
+              await delay(1000); // Wait for 1 second before the next attempt
+              continue; // Skip to the next iteration of the loop
+            }
+           
+            // Update the Camper's OriginsID with the new OriginsData ID
+            const success = await camper.update({ OriginsID: record.ID });
+            
+            if(!success){
+              console.log("Failed to update Camper, retrying...");
+              attempts--;
+              await delay(1000); // Wait for 1 second before the next attempt
+              continue; // Skip to the next iteration of the loop
+            }else{
+              console.log(`Updated Camper ${camper.ID} with OriginsID: ${record.ID}`);
+              console.log("success: ", success)
+              break;
+            }
+          } catch (error) {
+            console.error('Error updating Camper record:', error);
+          }
+        };
+      }
+    },
     sequelize,
     tableName: 'OriginsData',
     timestamps: false,
@@ -67,6 +109,6 @@ class OriginsData extends Model {}
           { name: "CamperID" },
         ]
       },
-    ]
+    ],
   });
   module.exports = OriginsData

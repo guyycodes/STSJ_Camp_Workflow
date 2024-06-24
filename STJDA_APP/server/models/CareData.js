@@ -4,13 +4,15 @@ class CareData extends Model {}
 
   CareData.init({
     ID: {
-      autoIncrement: false,
-      type: DataTypes.STRING(255),
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      unique: true,
+      allowNull: false
     },
     CamperID: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
+      type: DataTypes.INTEGER,
+      allowNull: true,
       references: {
         model: 'Camper',
         key: 'ID'
@@ -82,6 +84,7 @@ class CareData extends Model {}
       allowNull: true
     }
   }, {
+    hooks: {},
     sequelize,
     tableName: 'CareData',
     timestamps: false,

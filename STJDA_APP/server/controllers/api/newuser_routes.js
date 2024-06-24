@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const db = require('../../models');
 const { config } = require('dotenv');
+const { update } = require('../../models/BGTargets');
 config({ path: './.env' });
 let userData = {};
 
@@ -18,11 +19,12 @@ router.post('/create', async (req,res)=>{
     let careData;
     let specialNeeds;
     let insulinCarbRatio;
+
     if (!req.body) {
         return res.status(400).json({ message: "Bad request, no data provided" });
     }else if(req.body.role === 'volunteer'){
         userData = {
-            ID: null,
+            // ID: null,
             FirstName: req.body.firstName,
             LastName: req.body.lastName,
             Email: req.body.email,
@@ -47,7 +49,9 @@ router.post('/create', async (req,res)=>{
             role: req.body.role,
         }
         careData = {
-            ID: null,
+            // ID: null,
+            CareDataID: null,
+            OriginsID: null,
             CamperID: null,
             CareType: null,
             OverTheCounterMeds: req.body.overTheCounterMeds,
@@ -76,11 +80,13 @@ router.post('/create', async (req,res)=>{
             Mother: null,
             Father: null,
         }
-        specialNeeds={
+        bgTargets = {
             CareDataID: null,
-            SpecialNeedType: req.body.otherDiagnosis,
-            Notes: null,
-            SpecialNeedInstructions: null
+            TimeLabel: null,
+            BGTargetBreakfast: null,
+            BGTargetLunch: null,
+            BGTargetDinner: null,
+            BGTargetOther: null,
         }
         insulinCarbRatio = {
             CareDataID: null,
@@ -88,34 +94,49 @@ router.post('/create', async (req,res)=>{
             RatioLunch: req.body.InsulinToCarbRatio.Lunch,
             RatioDinner: req.body.InsulinToCarbRatio.Dinner,
         }
+        carbIntake = {
+            CareDataID: null,
+            DateTaken: null,
+            TimeLabel: null,
+            CarbAmount: null,
+        }
+        longActingInsulin = {
+            CareDataID: null,
+            Dosage: null,
+            LastAdministered: null,
+            LastAdministeredDosage: null,
+        }
+        rapidActingInsulin = {
+            CareDataID: null,
+            Dosage: null,
+            LastAdministered: null,
+            LastAdministeredDosage: null,
+        }
+        specialNeeds={
+            CareDataID: null,
+            SpecialNeedType: req.body.otherDiagnosis,
+            Notes: null,
+            SpecialNeedInstructions: null
+        }
     }   
         try {
             // Check for duplicate user
             const Model = userData.role === 'camper' ? db.Camper : db.Volunteers;
-
+            console.log('Model: ', typeof Model);
+            console.log("userData: ",userData)
+           
             ///read ops/////////////////////////////////////////////////////////////////////
-            const duplicateUser = await Model.findOne({ where: { email: userData.Email } });
+            const duplicateUserA = await db.Camper.findOne({ where: { email: userData.Email } });
+            const duplicateUserB = await db.Volunteers.findOne({ where: { email: userData.Email } });
             ////////////////////////////////////////////////////////////////////////////////
 
-            if (duplicateUser) {
-                await Model.destroy({ where: { email: userData.Email } });
-                // if theres a duplicate user redirect or send an erro such as bad response
-                // return res.status(409).json({ message: "Email already exists." });
+            if (duplicateUserA || duplicateUserB) {
+                return res.redirect(409, 'http://localhost:5173/error=Conflict');
             }
+            // if something weird happened...not sure why this would occur
             if (!req.body.email || !req.body.password) {
                 return res.status(400).json({ message: "Email and password are required." });
             }
-
-            // convert userData.email into an ID string
-            const emailBuffer = Buffer.from(userData.Email);
-            const emailArray = new Uint8Array(emailBuffer);
-            // Convert to a single number string
-            let stringID = '';
-            emailArray.forEach((byte) => {
-                stringID += byte.toString();
-            });
-            userData.ID = stringID;
-
             // Create user either volunteer or camper
             const newUser = await Model.create(userData);
             // remove the Photo base 64 string
@@ -124,54 +145,79 @@ router.post('/create', async (req,res)=>{
             const CamperModels = userData.role === 'camper' ? true : false;
             // if we are making a camper do this
             if (CamperModels) {
-                console.log(insulinCarbRatio) 
+ 
                 try{
-                    // links the camperModel to the care Data model
-                    Object.assign(careData, { ID: stringID, CamperID: stringID });
-                    console.log("careDataID's " + careData.ID + " : " + careData.CamperID)
-                    // create all the tables
-                    return
-                    const CareData = db.CareData;
-                    const InsulinCarbRatio = db.InsulinCarbRatios;
-                    const SpecialNeeds = db.SpecialNeed;
-                    const Origins = db.OriginsData;
+                    // links the camperModel to the care Data model using a Database hook
+                    const careDataWithCamperID = {...careData};
+                    const newCareData = await db.Camper.associateCamperWithCareData(userData.Email,careDataWithCamperID, 5)
+                    if(!newCareData){
+                        console.log('Failed to create care data');
+                    }else{
+                        console.log("newCareData ",newCareData)
+                        console.log('Care data created successfully');
+                    }
+                   // Destructure needed properties from newCareData
+                    const { CamperID: cpID, ID: cdID } = newCareData.dataValues;
 
-                    // calculate campers age
+                    // calculate campers age////////////////////////
                     const bDay = new Date(originsData.DateOfBirth);
+                    console.log('bday' + bDay) // bdayThu Jun 20 2024 19:00:00 GMT-0500 (Central Daylight Time)
                     const today = new Date();
                     let age = today.getFullYear() - bDay.getFullYear();
                     const m = today.getMonth() - bDay.getMonth();
                     if (m < 0 || (m === 0 && today.getDate() < bDay.getDate())) {
                         age--;
                     }
-                    // create careData table
-                    const careDataWithCamperID = {...careData, CamperID: stringID};
-                    const newCareData = await CareData.create(careDataWithCamperID);
-                    if(!newCareData){
-                        console.log('Failed to create care data');
-                    }
+                
+                    //////////////////////////////////////////////
                     // create orgigins table for camper
-                    originsData.DateOfBirth = age;
-                    originsData.CamperID = stringID;
-                    // assigns the unit8 string to the camper ID, and the rest of the data to the var originsDataWithCamperID
-                    const originsDataWithCamperID = {...originsData, CamperID: stringID };
-                    const newOrigins = await Origins.create(originsDataWithCamperID);
+                    originsData.Age = age;  // set age
+                    // assigns the data to the var originsDataWithCamperID
+                    const originsDataWithCamperID = {...originsData, CamperID: cpID };
+                    const newOrigins = await db.OriginsData.create(originsDataWithCamperID);
                     if(!newOrigins){
                         console.log('Failed to create origins data');
                     }
-                    return
-                    // create special needs table
-                    const specialNeedsWithCareDataID = {...specialNeeds, CareDataID: newCareData.ID};
-                    const newSpecialNeeds = await SpecialNeeds.create(specialNeedsWithCareDataID);
-                    if(!newSpecialNeeds){
-                        console.log('Failed to create special needs data');
+
+                    // bg target table
+                    const bgTargetWithCamperID = {...bgTargets, CareDataID: cdID}
+                    const newBgTarget = await db.BGTargets.create(bgTargetWithCamperID)
+                    if(!newBgTarget){
+                        console.log('Failed to create bg target data');
                     }
+
                     // create insulin carb ratio table
-                    const insulinCarbRatioWithCareDataID = {...insulinCarbRatio, CareDataID: newCareData.ID};
-                    const newInsulinCarbRatio = await InsulinCarbRatio.create(insulinCarbRatioWithCareDataID);
+                    const insulinCarbRatioWithCareDataID = {...insulinCarbRatio, CareDataID: cdID};
+                    const newInsulinCarbRatio = await db.InsulinCarbRatios.create(insulinCarbRatioWithCareDataID);
                     if(!newInsulinCarbRatio){
                         console.log('Failed to create insulin carb ratio data');
                     }
+                    // carb intake table
+                    const carbIntakeWithCareID = {...carbIntake, CareDataID: cdID};
+                    const newCarbIntake = await db.CarbIntake.create(carbIntakeWithCareID);
+                    if(!newCarbIntake){
+                        console.log('Failed to create carb intake data');
+                    }
+                    // long acting insulin table
+                    const longActingInsulinWIthCareID = {...longActingInsulin, CareDataID: cdID}
+                    const newLongActingInsulin = await db.LongActingInsulin.create(longActingInsulinWIthCareID);
+                    if(!newLongActingInsulin){
+                        console.log('Failed to create long acting insulin data');
+                    }
+                    // rapid acting insulin table
+                    const rapidActingINsulingWithCareID = {...rapidActingInsulin, CareDataID: cdID}
+                    const newRapidActingInsulin = await db.RapidActingInsulin.create(rapidActingINsulingWithCareID);
+                    if(!newRapidActingInsulin){
+                        console.log('Failed to create rapid acting insulin data');
+                    }
+                    // create special needs table
+                    const specialNeedsWithCareDataID = {...specialNeeds, CareDataID: cdID};
+                    const newSpecialNeeds = await db.SpecialNeed.create(specialNeedsWithCareDataID);
+                    
+                    if(!newSpecialNeeds){
+                        console.log('Failed to create special needs data');
+                    }
+
                 }catch(err){
                     console.log(err)
                 } 

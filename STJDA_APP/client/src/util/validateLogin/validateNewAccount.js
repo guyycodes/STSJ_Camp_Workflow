@@ -50,7 +50,7 @@ let validateNewAccount = async function (em, p, cf, loginForm)  {
         msgs[msgs.length] = "😅 Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character.";
     }
     if (msgs.length == 0) {
-      // Fetch API returns a Promise
+      // returns a Promise
         try{
           return 0;
         }catch(err){

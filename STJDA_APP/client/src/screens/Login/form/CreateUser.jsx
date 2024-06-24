@@ -42,10 +42,10 @@ export const CreateAccountForm = ({setTermsAccepted, handleAcceptTerms, openModa
     profileImage: null,
   });
 
-  useEffect(() => {
-    // This code runs whenever formData changes for checking proper function
-    console.log("FormData updated: ", formData);
-  }, [formData]);
+  // useEffect(() => {
+  //   // This code runs whenever formData changes for checking proper function
+  //   console.log("FormData updated: ", formData);
+  // }, [formData]);
 
   const handleChange = (event) => {
     const { name, value, checked, type } = event.target;
@@ -79,7 +79,7 @@ export const CreateAccountForm = ({setTermsAccepted, handleAcceptTerms, openModa
       if (result === 0) { // form validation function returns 0 if there are no errors
         if(formData.role === 'volunteer'){
           console.log('The result is 0');
-          openModal(true)
+          openModal(true)  // the modal is in the parent component & handle the api call after terms accepted
           handleAcceptTerms(formData)
         }else if(formData.role === 'camper'){ // cause the med form to be loaded up
            medForm(true, formData)

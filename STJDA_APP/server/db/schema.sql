@@ -3,18 +3,18 @@ CREATE DATABASE STJDA;
 USE STJDA;
 
 CREATE TABLE Camper (
-    ID VARCHAR(255) PRIMARY KEY,
+    ID INT AUTO_INCREMENT PRIMARY KEY UNIQUE,
     Photo TEXT,
     Email VARCHAR(255),
     Password VARCHAR(255),
     Notes TEXT,
-    CareDataID VARCHAR(255) UNIQUE,
+    CareDataID INT UNIQUE,
     OriginsID INT UNIQUE
 );
 
 CREATE TABLE CareData (
-    ID VARCHAR(255) PRIMARY KEY,
-    CamperID VARCHAR(255) UNIQUE,
+    ID INT AUTO_INCREMENT PRIMARY KEY UNIQUE,
+    CamperID INT UNIQUE,
     CareType VARCHAR(255),
     LastKnownBG INT,
     LastKnownBGTimestamp DATETIME,
@@ -32,8 +32,8 @@ CREATE TABLE CareData (
 );
 
 CREATE TABLE OriginsData (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    CamperID VARCHAR(255) UNIQUE,
+    ID INT AUTO_INCREMENT PRIMARY KEY UNIQUE,
+    CamperID INT UNIQUE,
     FirstName VARCHAR(255),
     LastName VARCHAR(255),
     Gender VARCHAR(255),
@@ -48,7 +48,7 @@ ALTER TABLE Camper ADD FOREIGN KEY (CareDataID) REFERENCES CareData(ID);
 ALTER TABLE Camper ADD FOREIGN KEY (OriginsID) REFERENCES OriginsData(ID);
 
 CREATE TABLE Volunteers (
-    ID VARCHAR(255) PRIMARY KEY,
+    ID INT AUTO_INCREMENT PRIMARY KEY UNIQUE,
     Photo TEXT,
     Email VARCHAR(100),
     Password VARCHAR(255),
@@ -58,8 +58,8 @@ CREATE TABLE Volunteers (
 );
 
 CREATE TABLE CamperAssignedVolunteers (
-    CamperID VARCHAR(255),
-    VolunteerID VARCHAR(255),
+    CamperID INT,
+    VolunteerID INT,
     PK INT AUTO_INCREMENT PRIMARY KEY,
     FOREIGN KEY (CamperID) REFERENCES Camper(ID),
     FOREIGN KEY (VolunteerID) REFERENCES Volunteers(ID)
@@ -72,7 +72,7 @@ CREATE TABLE Camps (
 );
 
 CREATE TABLE CamperCamps (
-    CamperID VARCHAR(255),
+    CamperID INT,
     CampID INT,
     FOREIGN KEY (CamperID) REFERENCES Camper(ID),
     FOREIGN KEY (CampID) REFERENCES Camps(ID)
@@ -80,7 +80,7 @@ CREATE TABLE CamperCamps (
 
 CREATE TABLE BGTargets (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    CareDataID VARCHAR(255) UNIQUE,
+    CareDataID INT UNIQUE,
     TimeLabel VARCHAR(50),
     BGTargetBreakfast VARCHAR(50),
     BGTargetLunch VARCHAR(50),
@@ -91,7 +91,7 @@ CREATE TABLE BGTargets (
 
 CREATE TABLE InsulinCarbRatios (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    CareDataID VARCHAR(255) UNIQUE,
+    CareDataID INT UNIQUE,
     TimeLabel VARCHAR(50),
     RatioBreakfast VARCHAR(50),
     RatioLunch VARCHAR(50),
@@ -101,7 +101,7 @@ CREATE TABLE InsulinCarbRatios (
 
 CREATE TABLE CarbIntake (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    CareDataID VARCHAR(255) UNIQUE,
+    CareDataID INT UNIQUE,
     DateTaken DATE,
     TimeLabel VARCHAR(50),
     CarbAmount INT,
@@ -110,7 +110,7 @@ CREATE TABLE CarbIntake (
 
 CREATE TABLE LongActingInsulin (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    CareDataID VARCHAR(255) UNIQUE,
+    CareDataID INT UNIQUE,
     Dosage INT,
     LastAdministered TIMESTAMP,
     LastAdministeredDosage VARCHAR(255),
@@ -119,7 +119,7 @@ CREATE TABLE LongActingInsulin (
 
 CREATE TABLE RapidActingInsulin (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    CareDataID VARCHAR(255) UNIQUE,
+    CareDataID INT UNIQUE,
     Dosage INT,
     LastAdministered TIMESTAMP,
     LastAdministeredDosage VARCHAR(255),
@@ -128,7 +128,7 @@ CREATE TABLE RapidActingInsulin (
 
 CREATE TABLE SpecialNeed (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    CareDataID VARCHAR(255) UNIQUE,
+    CareDataID INT UNIQUE,
     SpecialNeedType INT,
     Notes TEXT,
     SpecialNeedInstructions VARCHAR(255),

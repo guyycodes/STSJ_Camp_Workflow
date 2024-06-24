@@ -8,11 +8,13 @@ import {
     Link,
     Typography,
     Box,
+    CircularProgress,
   } from "@mui/material";
 import { validate } from '../../../util/validateLogin/validateLogin.js'
+import { useNavigate } from 'react-router-dom'; 
 
 export const SignInForm = ({ createUser }) => {
-
+  const navigate = useNavigate();
   const loginFormRef = useRef(null);
   const storedRememberMe = localStorage.getItem("STJDArememberMe") === "true";
   const storedEmail = storedRememberMe ? localStorage.getItem("STJDAemail") : "";
@@ -20,23 +22,15 @@ export const SignInForm = ({ createUser }) => {
   const storeJWT = storedRememberMe ? localStorage.getItem("STJDA_JWT") : "";
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [password, setPassword] = useState(storedPassword);
   const [rememberMe, setRememberMe] = useState(localStorage.getItem("STJDArememberMe") === "true");
   const [email, setEmail] = useState(storedEmail);
-  const [password, setPassword] = useState(storedPassword);
-
-  let oAuth2Client;
-  const [credentials, setCredentials] = useState();
-  const [jwt, setJWT] = useState(storeJWT);
-  const [showAlert, setShowAlert] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(false);
-  const[errorMessage, setErrorMessage] = useState("");
-
-  // const [loginUser, { loading: updateLoading, error: updateError }] = useMutation(LOGIN_USER);
+  const [spinner, setSpinner] = useState(false)
 
   useEffect(() => {
-      // make a function to calle the backend and get the credentials
-  // make the function grab the credentials run on the useEffect
-  // sett the URL for oauth to the Google button
+    // make a function to calle the backend and get the credentials
+    // make the function grab the credentials run on the useEffect
+    // sett the URL for oauth to the Google button
     if (rememberMe) {
       localStorage.setItem("STJDAemail", email);
       localStorage.setItem("STJDApassword", password);
@@ -48,27 +42,73 @@ export const SignInForm = ({ createUser }) => {
     }
   }, [rememberMe, email, password]);
 
-  const handleSubmit = (event) => {
+  const callApi = async (theFormData) =>{
+    try{
+      const response = await fetch('http://localhost:3000/api/login', {
+          method: 'POST', // Specify the method
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify(theFormData)
+      });
+      const data = await response.text();
+      if(response.ok){
+        const path = parseURL(data);
+        return path
+      }else{
+        const path = parseURL(data);
+        return path
+      }
+    }catch(err){
+      console.log(err)
+    }
+  }
+  
+  const parseURL = (d) =>{
+    // Get the last part, which is the URL
+    const url = d.split(' ').slice(-1)[0]; 
+    // Parse the URL and get the pathname
+    const pathname = new URL(url).pathname;
+    return pathname;
+  }
+
+  const handleSubmit = (event, em, pass) => {
     event.preventDefault();
     const loginForm = loginFormRef.current;
 
-    validate(email, password, loginForm)
+    validate(em, pass, loginForm)
+    .then(async (result) => {
+     if (result === 0) { // form validation function returns 0 if there are no errors
+      const data = {
+        email: em,
+        password: pass
+      }
+      await callApi(data)
+      .then((path) => {
+        setSpinner(true)
+        //set timeout for 1 second
+        setTimeout(() => {
+          setSpinner(false);
+          navigate(path);
+      }, 2250);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch credentials:', error);
+      })
 
-    console.log(email, password);
+      }else{
+        // error
+        console.error("Error redirecting")
+        return
+      }
+    })
   }
 
   const handleRememberMe = (event) => {
     setRememberMe(event.target.checked);
-    console.log(event.target.checked)
   };
 
-  function testEmailInput(event) {
-    const result = emailRegex.test(event.target.value);
-    (!result) ? (setEmailError(true)) : (
-      setEmailError(false),
-      setEmail(event.target.value)
-    );
-  }
 
   const handlePassword = (event) =>{
     const { value } = event.target;
@@ -114,8 +154,11 @@ export const SignInForm = ({ createUser }) => {
           <div className="sign-in-forms">
             <div className="sign-in-form-web">
               <div className="div">
-                <Typography variant="h4" className="element">
+                <Typography variant="h4" className="element" >
                   Welcome!
+                   {spinner &&<CircularProgress sx={{
+                    marginLeft: '3rem' 
+                  }}/>}
                 </Typography>
                 <div className="div-2">
                   <div className="div-3">
@@ -128,7 +171,7 @@ export const SignInForm = ({ createUser }) => {
                       value={email}
                       onChange={handleEmail} // Corrected to use handleEmail
                       error={emailError} 
-                    />
+                      />
                     <TextField
                       label="Password"
                       variant="outlined"
@@ -138,7 +181,7 @@ export const SignInForm = ({ createUser }) => {
                       value={password}
                       onChange={handlePassword} // Corrected to use handlePass
                       error={passwordError} 
-                    />
+                      />
                   </div>
                   <div className="div-5">
                     <FormControlLabel
@@ -153,7 +196,21 @@ export const SignInForm = ({ createUser }) => {
                   </div>
                 </div>
               </div>
-              <Button onClick={handleSubmit} variant="contained" fullWidth className="primary-button">
+              <Button onClick={(e) => {
+                let em;
+                let pass
+                // check local storage if 'remember me is set
+                if (rememberMe) {
+                  em = localStorage.getItem("STJDAemail");
+                  pass = localStorage.getItem("STJDApassword");
+                }else{
+                  em = email;
+                  pass = password;
+                }
+                // grab the email and password and pass it to the function submit
+                handleSubmit(e,em,pass)
+                }} 
+                variant="contained" fullWidth className="primary-button">
                 Sign In
               </Button>
               <div className="nav" />
