@@ -14,7 +14,6 @@ export const ProfileContainer = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-
   const handleTabSelection = (int) => {
     switch (int) {
       case 0:

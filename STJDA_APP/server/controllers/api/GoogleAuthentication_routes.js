@@ -69,11 +69,11 @@ router.get('/profile', async (req, res) => {
         if (!camper && !volunteers) { // if the user doesnt exist
           // send back an unsecure cookie 
           res.cookie('STJDA_No_User', {
-            httpOnly: true,
-            secure: true,
+            httpOnly: false,
+            secure: false,
             sameSite: 'Lax',
             path: '/',
-            maxAge: 3000  // Expire after 30 seconds
+            maxAge: 30000  // Expire after 300 seconds
           })
         }else{
           // Send back a cookie with the JWT to use clientside

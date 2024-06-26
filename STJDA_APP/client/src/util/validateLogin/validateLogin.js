@@ -4,6 +4,9 @@ const displayErrorMsgs = function (msgs, loginForm) {
     const ul = document.createElement("ul"); // creates a ul
     ul.classList.add("messages"); // adds a class to the ul
     ul.style.color = "red";
+    if(msgs === 'Login Success!'){
+        ul.style.color = 'green'
+    }
     // Clear the ul before appending new messages
     while (ul.firstChild) {
         ul.removeChild(ul.firstChild);
@@ -32,51 +35,33 @@ const clearErrors = function(){
     msgs = [];
 }
 
-let validate = async function (em, p, loginForm)  {
+let validate = async function (em, p, loginForm, customError = '')  {
     let email = em;
     let password = p;
     const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\b/;
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
+    let pathname;
     
-    if (!emailPattern.test(email)) {
+    if(customError !== ''){
+        msgs[msgs.length] = customError;
+    }
+    else if (!emailPattern.test(email)) {
         msgs[msgs.length] = "Please enter a valid email address.";
     } 
     else if (!passwordPattern.test(password)) {
         msgs[msgs.length] = "Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one digit, and one special character.";
     }
     if (msgs.length == 0) {
-      // Fetch API returns a Promise
-        try{
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-                // If login is successful, redirect to dashboard
-                if (response.ok) {
-                    // set the session token in the browser
-                    const data = await response.json();
-                    document.cookie = `session_token=${data.newSession.session_token}; path=/`
-                    msgs[msgs.length] = "Login Success!";
-                    displayErrorMsgs(msgs, loginForm)
-                    setTimeout(() => {window.location.href = '/dashboard';}, 500);
-                    //heartbeatInterval()
-                    return;
-                } else {
-                    // Display error message from server
-                    const data = await response.json();
-                    console.error({message: "Server error", Error: data})
-                    msgs[msgs.length] = data.message
-                    displayErrorMsgs(msgs, loginForm)
-                    return;
-                }
-        }catch(err){
-            console.error({message:"Username or Password is incorrect", Error: err})
-        }
-    }
+        // returns a Promise
+          try{
+            return 0;
+          }catch(err){
+              console.error({message:"Username or Password is incorrect", Error: err})
+          }
+      }
     displayErrorMsgs(msgs, loginForm)
-    setTimeout(() => clearErrors(), 5000);
+    setTimeout(() => clearErrors(), 5500);
+    return pathname
 }
 
 export { clearErrors, validate };

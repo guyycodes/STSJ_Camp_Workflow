@@ -4,6 +4,9 @@ const bcrypt = require('bcrypt')
 
 const hashPassword = async (newUserData) => {
  if (newUserData.Password) {
+
+  console.log("Volunteer password: ",newUserData.Password)
+
     const newPassword = await bcrypt.hash(newUserData.Password, 10);
     newUserData.Password = newPassword;
   } else {
@@ -12,18 +15,23 @@ const hashPassword = async (newUserData) => {
 };
 
 class Volunteers extends Model {
-  // this function uses bcrypt to  validate a pasword with the saved hashed password
-  async checkPassword(loginPw) {
-    // console.log(`loginPw: ${loginPw}, this.password: ${this.Password}`);
-    return bcrypt.compareSync(loginPw, this.Password);
+  
+  static async checkPassword(loginPw, email) {
+    
+    const user = await this.findOne({ where: { Email: email } });
+    const hashedPassword = user.Password;
+    console.log(`Checking volunteer password, Login PW: ${loginPw}, Stored Hash: ${hashedPassword}`);
+    return bcrypt.compareSync(loginPw, hashedPassword);
   }
+
 }
   Volunteers.init({
     ID: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: false,
+      autoIncrement: true,
+      unique: true
     },
     Photo: {
       type: DataTypes.TEXT,
@@ -70,15 +78,19 @@ class Volunteers extends Model {
       allowNull: true
     },
   }, {
-
     // When adding hooks via the init() method, they go below
     hooks: {
-      // Use the beforeCreate hook to work with data before a new instance is created
-      beforeCreate: (newUserData) => hashPassword(newUserData), //(POST methods)
-      // Here, perform a check before updating the database.
-      beforeUpdate: (newUserData) => hashPassword(newUserData), //(PUT methods)
+      beforeCreate: (user, options) => {
+        if (user.Password) {
+          user.Password = bcrypt.hashSync(user.Password, 10);
+        }
+      },
+      beforeUpdate: (user, options) => {
+        if (user.changed('Password')) {
+          user.Password = bcrypt.hashSync(user.Password, 10);
+        }
+      }
     },
-
     sequelize,
     tableName: 'Volunteers',
     timestamps: false,

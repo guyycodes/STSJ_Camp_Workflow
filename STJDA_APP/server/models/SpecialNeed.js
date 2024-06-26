@@ -10,7 +10,7 @@ class SpecialNeed extends Model {}
       primaryKey: true
     },
     CareDataID: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'CareData',
@@ -19,7 +19,7 @@ class SpecialNeed extends Model {}
       unique: true
     },
     SpecialNeedType: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     Notes: {

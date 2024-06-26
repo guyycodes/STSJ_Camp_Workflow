@@ -21,6 +21,14 @@ export const SignUpSection = () => {
       setUseMedForm(bool);
     }
 
+    const parseURL = (d) =>{
+      // Get the last part, which is the URL
+      const url = d.split(' ').slice(-1)[0]; 
+      // Parse the URL and get the pathname
+      const pathname = new URL(url).pathname;
+      navigate(pathname)
+    }
+
     const submitUser = async (theFormData) =>{
       if (termsAccepted && (theFormData.role === 'volunteer')) {
           try{
@@ -34,11 +42,9 @@ export const SignUpSection = () => {
               });
               const data = await response.text();
               if(response.ok){
-                // Get the last part, which is the URL
-                const url = data.split(' ').slice(-1)[0]; 
-                // Parse the URL and get the pathname
-                const pathname = new URL(url).pathname;
-                navigate(pathname)
+                parseURL(data);
+              }else{
+                parseURL(data);
               }
             }catch(err){
               console.log(err)
@@ -46,20 +52,18 @@ export const SignUpSection = () => {
       }else if(termsAccepted && (theFormData.role === 'camper')) {
           try{
             const response = await fetch('http://localhost:3000/api/signup/create', {
-                method: 'POST', // Specify the method
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify(theFormData)
+              method: 'POST', // Specify the method
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              credentials: 'include',
+              body: JSON.stringify(theFormData)
             });
             const data = await response.text();
             if(response.ok){
-              // Get the last part, which is the URL
-              const url = data.split(' ').slice(-1)[0]; 
-              // Parse the URL and get the pathname
-              const pathname = new URL(url).pathname;
-              navigate(pathname)
+              parseURL(data);
+            }else{
+              parseURL(data);
             }
           }catch(err){
             console.log(err)
@@ -155,8 +159,12 @@ export const SignUpSection = () => {
                         setSpinner(true);
                         setTimeout(() => {
                           setSpinner(false);
+                        }, 3250); 
+
+                        setSpinner(true);
+                        setTimeout(() => {
                           submitUser(formsData);
-                        }, 1500);  // 1500 milliseconds delay
+                        }, 2000);  // 1500 milliseconds delay
                       }}>
                       OK
                     </Button>
